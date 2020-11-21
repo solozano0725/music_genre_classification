@@ -37,25 +37,28 @@ def loadSongsFolders():
 
 
 def loadSongWithLibrosa(songsFolder, folder):
-    dic = {}
     f = f"{songsFolder}\\{folder}"
+    listOfList = []
     for filename in glob.glob(os.path.join(f, '*.wav')):
         y, sr = librosa.load(str(filename))
-        print(str(filename))
-        print(y)
-        print(sr)
-        dic = (insertationKeyDic(dic, f'{folder}-y', y))
-        dic = (insertationKeyDic(dic, f'{folder}-sr', sr))
-        #if validateKeyDic(dic, folder) is True:
-        #    dic[f'{folder}-y'].append(y)
-        #    dic[f'{folder}-sr'].append(sr)
-        #else:
-        #    dic[folder+'-y'] = y
-        #    dic[folder+'-sr'] = sr
-    return dic
+        listOfList.append((y, sr))
+    return listOfList
+
+def loadSongsLibrosa():
+    i=0
+    dic = {}
+    res = []
+    obj = os.scandir(songsFolder) 
+    for entry in obj : 
+        if entry.is_dir(): 
+            res = loadSongWithLibrosa(songsFolder, entry.name)
+            dic[entry.name]  = res
+            i+=1
+            target.append(i)
+    return dic, target
 
 def validationKeyDic(dict, name):
-    return lambda x : True if (name in dict) else False
+    return True if (name in dict) else False
 
 def insertationKeyDic(dict, name, d):
     if validationKeyDic(dict, name) is True:
@@ -63,22 +66,3 @@ def insertationKeyDic(dict, name, d):
     else: 
         dict[name] = d
     return dict
-
-def loadSongsLibrosa():
-    i=0
-    dic = {}
-    res = {}
-    obj = os.scandir(songsFolder) 
-    for entry in obj : 
-        if entry.is_dir(): 
-            res = loadSongWithLibrosa(songsFolder, entry.name)
-            dic =(insertationKeyDic(dic, entry.name, res))
-            #if validateKeyDic(dic, entry.name) is True:
-            #    dic[entry.name].append(res)
-            #else: 
-            #    dic[entry.name]=res 
-            i+=1
-            target.append(i)
-    return dic, target
-
-print(loadSongsLibrosa())
