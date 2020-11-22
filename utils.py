@@ -66,3 +66,23 @@ def insertationKeyDic(dict, name, d):
     else: 
         dict[name] = d
     return dict
+
+def printDic(dict):
+    for key in dict:
+        print(key, '->', dict[key], 'len:', len(dict[key]))
+
+def showSpectrums(title, data):
+    plt.figure(figsize=(10, 4))
+    librosa.display.specshow(librosa.power_to_db(data, ref=np.max), y_axis='mel', fmax=8000, x_axis='time')
+    plt.colorbar(format='%+2.0f dB')
+    plt.title(title)
+    plt.tight_layout()
+    plt.show()
+
+def showTimevsFrequency(title, data):
+    plt.plot(data)
+    plt.xlabel('time')
+    plt.ylabel('frequency')
+    plt.tight_layout()
+    plt.title(title)
+    plt.show()
